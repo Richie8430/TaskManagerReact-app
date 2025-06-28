@@ -4,9 +4,12 @@ import { useSelector } from 'react-redux';
 
 import { useGetMoviesQuery } from '../../services/TMDB';
 import {MovieList} from '..';
+import { selectGenreOrCategory } from '../../features/currentGrneorCategory';
 
 function Movies() {
-  const { data, error, isFetching } = useGetMoviesQuery();
+  const {page,setPage}=useState(1);
+  const {genreIdOrCategoryName} = useSelector( (state)=> state.currentGenreOrCategory) 
+  const { data, error, isFetching } = useGetMoviesQuery({genreIdOrCategoryName, page});
   
   if (isFetching) {
     return(
@@ -16,7 +19,7 @@ function Movies() {
     );
   }
 
-  if(!data.results.length){
+  if(!data || !data.length){
     return(
       <Box display="flex" alignItems="center" mt="20px">
         <Typography variant="h4">
@@ -28,7 +31,7 @@ function Movies() {
   }
 
   if(error) return 'An error has occured';
-  console.log(data);
+
   return (
     <div>
       <MovieList  movies={data}/>

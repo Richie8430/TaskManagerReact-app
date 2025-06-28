@@ -1,18 +1,29 @@
 import React from 'react'
 import { CssBaseline, Switch } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import useStyles from './assets/styles';
 import { Actors, MovieInformation, Movies, Profile, NavBar } from './assets';
 
 
 const App = ()=>{
-  const classes= useStyles();
+  const styles={
+        root: {
+        display:'flex',
+        height:'100%'
+    },
+   toolbar: {
+        height:'70px'
+    },
+    content:{
+        flexGrow:'1',
+        padding:'2em',
+    }
+  };
   return (
-<div className={classes.root}>
+<div style={styles.root}>
   <CssBaseline>
-    <main className={classes.content}>
-      <div className={classes.toolbar}/>
-      <NavBar/>
+     <NavBar/>
+    <main style={styles.content}>
+      <div style={styles.toolbar}/>
       <Routes>
         <Route path='/movie/:id' element={<MovieInformation/>}/>
         <Route path='/actors/:id' element={<Actors/>}/>
