@@ -1,38 +1,47 @@
-import React from 'react'
-import { CssBaseline, Switch } from '@mui/material';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { Actors, MovieInformation, Movies, Profile, NavBar } from './assets';
-
+import React, { useEffect, useState } from 'react'
+import TaskForm from './components/TaskForm';
+import TaskList from './components/TaskList';
+import ProgressTracker from './components/ProgressTracker';
+import './style.css'
 
 const App = ()=>{
-  const styles={
-        root: {
-        display:'flex',
-        height:'100%'
-    },
-   toolbar: {
-        height:'70px'
-    },
-    content:{
-        flexGrow:'1',
-        padding:'2em',
-    }
-  };
+  const [tasks,setTasks]=useState([]);
+
+  useEffect(()=>{
+    localStorage.setItem("tasks", JSON.stringify(tasks))
+  })
+  const addTask=(task)=>{
+       setTasks([...tasks, task])
+  }
+
+  const updateTask=(updatedTask, index)=>{
+    const newTask = [...tasks];
+    newTask[index]=updatedTask;
+    setTasks(newTask)
+
+  }
+  const deleteTask=(index)=>{
+    setTasks(tasks.filter((_,i)=> i!=index));
+  }
+  const clearTasks=()=>{
+    setTasks([]);
+  }
+
+
   return (
-<div style={styles.root}>
-  <CssBaseline>
-     <NavBar/>
-    <main style={styles.content}>
-      <div style={styles.toolbar}/>
-      <Routes>
-        <Route path='/movie/:id' element={<MovieInformation/>}/>
-        <Route path='/actors/:id' element={<Actors/>}/>
-        <Route path='/' element={<Movies/>}/>
-        <Route path='/profile/:id' element={<Profile/>}/>
-      </Routes>
-    </main>
-  </CssBaseline>
-  </div>
+ <div className='App'>
+
+  <header>
+    <h1 className='title'>TaskBuddy</h1>
+    <p className='tagline'>Your Friendly Task Manager</p>
+  </header>
+
+  <TaskForm addTask={addTask}/>
+  <TaskList tasks={tasks} updateTask={updateTask} deleteTask={deleteTask}/>
+  <ProgressTracker tasks={tasks}/>
+
+  {tasks.length>0 && (<button className='clear-btn' onClick={clearTasks}>Clear All task</button>)}
+ </div>
   );
 }
 
